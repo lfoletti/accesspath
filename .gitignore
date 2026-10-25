@@ -1,0 +1,27 @@
+__pycache__/
+*.pyc
+.DS_Store
+
+# configuration locale et secrets
+.env
+.env.*
+!.env.example
+
+# données écrites par --save (dossier du projet appelant)
+data/
+
+# environnements et outils
+.venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+.coverage.*
+htmlcov/
+*.egg-info/
+build/
+dist/
+
+# notes locales
+CLAUDE.md
+.claude/settings.local.json

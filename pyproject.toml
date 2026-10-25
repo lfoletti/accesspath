@@ -1,0 +1,84 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "accesspath"
+version = "0.1.0"
+description = "Website access audit (Site Architecture Profile): the simplest way that works to read a site, and what the site exposes to machines."
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [{ name = "Lauro Foletti" }]
+license = "MIT"
+license-files = ["LICENSE"]
+dependencies = [
+    "httpx>=0.28,<1",
+    "PyYAML>=6.0",
+]
+
+[project.optional-dependencies]
+# Audit d'architecture en navigateur (accesspath.sap_inspect)
+inspect = [
+    "nodriver",
+]
+# Empreinte TLS Chrome (curl_cffi) et décompression br
+tls = [
+    "curl_cffi>=0.15",
+    "brotli>=1.2.1",
+]
+# Gestes humains et préparation des profils (warmup, gestes)
+browser = [
+    "playwright",
+]
+# Audit des pages de contenu (sap batch --mode contents)
+contents = [
+    "beautifulsoup4",
+]
+dev = [
+    "pytest",
+    "pytest-cov",
+    "ruff==0.17.2",
+    "mypy",
+    "types-PyYAML",
+    "pip-audit",
+]
+
+[project.scripts]
+accesspath = "accesspath.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["accesspath"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers"
+markers = [
+    "network: test qui sort sur Internet (exclu en CI : -m \"not network\")",
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I", "UP", "B", "ASYNC"]
+# Un paramètre `timeout` sur une fonction async est un choix d'API ici
+# (budget de la requête, pas un asyncio.timeout déguisé).
+ignore = ["ASYNC109"]
+
+[tool.ruff.lint.per-file-ignores]
+# Lancement de Chrome : lsof (5 s max) et Popen restent synchrones à dessein.
+"accesspath/browser/cdp.py" = ["ASYNC220", "ASYNC221", "ASYNC240"]
+"tests/test_sap_inspect.py" = ["F401"]
+
+[tool.mypy]
+# Limité au moteur d'audit ; non bloquant en CI (continue-on-error).
+python_version = "3.11"
+files = [
+    "accesspath/probe.py",
+    "accesspath/sap.py",
+    "accesspath/stealth.py",
+]
+ignore_missing_imports = true
+follow_imports = "silent"

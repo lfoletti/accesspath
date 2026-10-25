@@ -1,0 +1,538 @@
+# Savoir des collecteurs de sites, vue publique (voir accesspath/acquisition/patterns.py).
+# Aucun site nommé : chaque motif dit combien de sites le portent ; seuls les motifs partagés restent.
+version: 1
+generated: '2026-10-25'
+cms_profiles:
+  wordpress:
+    body_scope: .entry-content, article.post, article, main
+    lazy_attrs:
+    - data-src
+    - data-lazy-src
+    - data-hw-src
+    - src
+    image_allow_substrings:
+    - /wp-content/uploads/
+    - /app/uploads/
+    image_canonical_strip_patterns:
+    - regex: -\d+x\d+(?:-c-[a-z]+)?(?=\.[a-z]+(?:[?#]|$))
+      flags: i
+    project_path_patterns:
+    - regex: ^/(?:[a-z]{2}/)?(?:project|projects|projet|projets|projekt|projekte|progetto|progetti|realisation|realisations|portfolio|portfolio_page|work|works|werk|werke|oeuvre|oeuvres|references|referenzen|bauten)/[^/]+/?$
+      flags: i
+  drupal:
+    body_scope: main, article, .field--name-body, .node__content
+    lazy_attrs:
+    - data-src
+    - src
+    image_allow_substrings:
+    - /sites/default/files/
+    - /sites/all/files/
+    - /files/
+    image_canonical_strip_patterns:
+    - regex: /styles/[^/]+/public/
+      flags: i
+    project_path_patterns:
+    - regex: ^/(?:[a-z]{2}/)?(?:project|projects|projekt|projekte|referenzen|references|realisations|portfolio)/[^/]+/?$
+      flags: i
+  imaginator:
+    body_scope: '#content'
+    lazy_attrs:
+    - src
+    image_allow_substrings:
+    - opere_images/
+    - proj_images/
+    - /images/
+    image_canonical_strip_patterns: []
+    project_path_patterns: []
+  typo3:
+    body_scope: 'main, article, .frame-default, #c1'
+    lazy_attrs:
+    - data-src
+    - src
+    image_allow_substrings:
+    - /fileadmin/
+    - /typo3conf/
+    - /uploads/
+    - /_processed_/
+    image_canonical_strip_patterns: []
+    project_path_patterns:
+    - regex: ^/(?:[a-z]{2}/)?(?:project|projekt|projekte|referenzen|references)/[^/]+/?$
+      flags: i
+  django_filer:
+    body_scope: .content, main, article
+    lazy_attrs:
+    - data-src
+    - src
+    image_allow_substrings:
+    - /media/filer_public/
+    - /media/filer_public_thumbnails/
+    - /media/uploads/
+    image_canonical_strip_patterns:
+    - regex: /filer_public_thumbnails/filer_public/
+      flags: i
+    - regex: __[a-f0-9]{6,}\.[0-9]+x[0-9]+(?:_[a-z0-9]+)?(?=\.[a-z]+(?:[?#]|$))
+      flags: i
+    project_path_patterns: []
+  squarespace:
+    body_scope: article, main, .sqs-block-content, .content
+    lazy_attrs:
+    - data-src
+    - data-image
+    - src
+    image_allow_substrings:
+    - squarespace-cdn.com
+    - static1.squarespace.com
+    - static.squarespace.com
+    image_canonical_strip_patterns:
+    - regex: \?format=[^&#\"']+
+      flags: i
+    - regex: '&(?:dpr|width|height)=[^&#\"'']+'
+      flags: i
+    project_path_patterns: []
+generic:
+  project_path_patterns:
+  - regex: ^/(?:(?:fr|de|it|en)/)?(?:project|projects|projet|projets|realisation|realisations|oeuvre|oeuvres|portfolio|projekt|projekte|werk|werke|bau|bauten|arbeit|arbeiten|architektur|architekturen|architecture|architettura|referenz|referenzen|interior|interiors|interieur|interieurs|interno|interni|progetto|progetti|lavoro|lavori|opera|opere|work|works|building|buildings)/[^/]+/?$
+    flags: i
+  project_words:
+  - arbeit
+  - arbeiten
+  - architecture
+  - architektur
+  - architektur-
+  - bau
+  - bauten
+  - building
+  - buildings
+  - house
+  - houses
+  - innenausbau
+  - innenausbauten
+  - interieur
+  - interior
+  - interiors
+  - interni
+  - interno
+  - konkurrenz
+  - lavori
+  - lavoro
+  - neubau
+  - neubauten
+  - opera
+  - opere
+  - portfolio
+  - progetti
+  - progetto
+  - project
+  - projects
+  - projekt
+  - projekte
+  - projet
+  - projets
+  - realisation
+  - realisations
+  - referenz
+  - referenzen
+  - studie
+  - studien
+  - study
+  - umbau
+  - umbauten
+  - werk
+  - werke
+  - werkliste
+  - werkverzeichnis
+  - wettbewerb
+  - wettbewerbe
+  - work
+  - works
+  non_project_slugs:
+  - about
+  - admin
+  - agb
+  - agenda
+  - aktuell
+  - aktuelles
+  - angebot
+  - angebote
+  - arbeit
+  - arbeiten
+  - assets
+  - atelier
+  - auftraggeber
+  - author
+  - bau
+  - bauten
+  - beratung
+  - blog
+  - bureau
+  - careers
+  - category
+  - clients
+  - company
+  - contact
+  - cookies
+  - datenschuterklaerung
+  - datenschutz
+  - datenschutzerklaerung
+  - de
+  - dienstleistung
+  - en
+  - equipe
+  - event
+  - events
+  - feed
+  - firma
+  - fr
+  - geschichte
+  - gewerbedienstleistungen
+  - history
+  - home
+  - impressum
+  - imprint
+  - index
+  - it
+  - items
+  - jobs
+  - karriere
+  - kompetenz
+  - kompetenzen
+  - kontakt
+  - kontakte
+  - kunden
+  - leistung
+  - leistungen
+  - leistungsspektrum
+  - links
+  - login
+  - mentions-legales
+  - mitarbeiter
+  - mitgliedschaft
+  - mitgliedschaften
+  - mitgliedschatften
+  - news
+  - newsletter
+  - office
+  - partner
+  - partners
+  - philosophie
+  - philosophy
+  - portfolio
+  - portrait
+  - press
+  - presse
+  - privacy
+  - profil
+  - profile
+  - project
+  - projects
+  - projekt
+  - projekte
+  - projet
+  - projets
+  - publications
+  - publikationen
+  - realisation
+  - realisations
+  - references
+  - referenz
+  - referenzen
+  - register
+  - rm
+  - robots
+  - rss
+  - search
+  - service
+  - services
+  - sitemap
+  - stellen
+  - stellenangebote
+  - studio
+  - tag
+  - team
+  - team-1
+  - team-2
+  - unternehmen
+  - user
+  - werk
+  - werke
+  - wp-admin
+  - wp-content
+  - wp-includes
+  lazy_attrs:
+  - data-src
+  - data-lazy-src
+  - data-original
+  - data-hw-src
+  - src
+families:
+  project_url_patterns:
+  - regex: ^/(?:[a-z]{2}/)?(?:referenzen|references|projekt|projekte|projects|project|werk|werke|portfolio)/[^/]+/?$
+    flags: i
+    n_sites: 2
+  - regex: ^/portfolio\-items/[^/]+/?$
+    flags: i
+    n_sites: 2
+  lazy_attrs: []
+  image_allow_substrings: []
+  image_canonical_strip_patterns: []
+  body_scopes:
+  - selector: article
+    n_sites: 4
+  info_table_labels: []
+templates:
+- cms: wordpress
+  best:
+    combo:
+      cms: wordpress
+      url_pattern: défaut
+      discovery: sitemap
+      chrome_tls: false
+      image_paths: défaut
+      thumb_strip: défaut
+    sites: 85
+    successes: 72
+    success_rate: 0.847
+    score: 0.756
+    median_projects: 39
+    median_images_per_project: 7.1
+  variants:
+  - combo:
+      cms: wordpress
+      url_pattern: défaut
+      discovery: sitemap + page de liste
+      chrome_tls: false
+      image_paths: défaut
+      thumb_strip: défaut
+    sites: 55
+    successes: 44
+    success_rate: 0.8
+    score: 0.676
+    median_projects: 43
+    median_images_per_project: 4.0
+  - combo:
+      cms: wordpress
+      url_pattern: défaut
+      discovery: page de liste
+      chrome_tls: false
+      image_paths: défaut
+      thumb_strip: défaut
+    sites: 3
+    successes: 3
+    success_rate: 1.0
+    score: 0.438
+    median_projects: 24
+    median_images_per_project: 10.0
+  - combo:
+      cms: wordpress
+      url_pattern: défaut
+      discovery: aucune déclarée
+      chrome_tls: false
+      image_paths: défaut
+      thumb_strip: défaut
+    sites: 9
+    successes: 3
+    success_rate: 0.333
+    score: 0.121
+    median_projects: 0
+    median_images_per_project: 2.0
+- cms: aucun
+  best:
+    combo:
+      cms: aucun
+      url_pattern: défaut
+      discovery: sitemap
+      chrome_tls: false
+      image_paths: défaut
+      thumb_strip: défaut
+    sites: 324
+    successes: 253
+    success_rate: 0.781
+    score: 0.733
+    median_projects: 35.5
+    median_images_per_project: 4.4
+  variants:
+  - combo:
+      cms: aucun
+      url_pattern: défaut
+      discovery: sitemap + page de liste
+      chrome_tls: false
+      image_paths: défaut
+      thumb_strip: défaut
+    sites: 101
+    successes: 78
+    success_rate: 0.772
+    score: 0.681
+    median_projects: 45
+    median_images_per_project: 4.1
+  - combo:
+      cms: aucun
+      url_pattern: défaut
+      discovery: page de liste
+      chrome_tls: false
+      image_paths: défaut
+      thumb_strip: défaut
+    sites: 163
+    successes: 104
+    success_rate: 0.638
+    score: 0.562
+    median_projects: 15
+    median_images_per_project: 3.4
+  - combo:
+      cms: aucun
+      url_pattern: défaut
+      discovery: sitemap
+      chrome_tls: true
+      image_paths: défaut
+      thumb_strip: défaut
+    sites: 16
+    successes: 12
+    success_rate: 0.75
+    score: 0.505
+    median_projects: 28.0
+    median_images_per_project: 0.5
+  - combo:
+      cms: aucun
+      url_pattern: défaut
+      discovery: aucune déclarée
+      chrome_tls: false
+      image_paths: défaut
+      thumb_strip: défaut
+    sites: 120
+    successes: 14
+    success_rate: 0.117
+    score: 0.071
+    median_projects: 0.0
+    median_images_per_project: 0.0
+  - combo:
+      cms: aucun
+      url_pattern: défaut
+      discovery: page de liste
+      chrome_tls: true
+      image_paths: défaut
+      thumb_strip: défaut
+    sites: 4
+    successes: 1
+    success_rate: 0.25
+    score: 0.046
+    median_projects: 2.0
+    median_images_per_project: 1.0
+  - combo:
+      cms: aucun
+      url_pattern: défaut
+      discovery: aucune déclarée
+      chrome_tls: true
+      image_paths: défaut
+      thumb_strip: défaut
+    sites: 11
+    successes: 0
+    success_rate: 0.0
+    score: 0.0
+    median_projects: 0
+    median_images_per_project: 1.8
+- cms: typo3
+  best:
+    combo:
+      cms: typo3
+      url_pattern: défaut
+      discovery: sitemap
+      chrome_tls: false
+      image_paths: défaut
+      thumb_strip: défaut
+    sites: 3
+    successes: 3
+    success_rate: 1.0
+    score: 0.438
+    median_projects: 13
+    median_images_per_project: 6.6
+  variants:
+  - combo:
+      cms: typo3
+      url_pattern: défaut
+      discovery: sitemap + page de liste
+      chrome_tls: false
+      image_paths: défaut
+      thumb_strip: défaut
+    sites: 4
+    successes: 3
+    success_rate: 0.75
+    score: 0.301
+    median_projects: 5.0
+    median_images_per_project: 8.8
+  - combo:
+      cms: typo3
+      url_pattern: défaut
+      discovery: page de liste
+      chrome_tls: false
+      image_paths: défaut
+      thumb_strip: défaut
+    sites: 2
+    successes: 1
+    success_rate: 0.5
+    score: 0.095
+    median_projects: 30.5
+    median_images_per_project: 9.4
+- cms: squarespace
+  best:
+    combo:
+      cms: squarespace
+      url_pattern: défaut
+      discovery: sitemap
+      chrome_tls: false
+      image_paths: défaut
+      thumb_strip: défaut
+    sites: 1
+    successes: 1
+    success_rate: 1.0
+    score: 0.207
+    median_projects: 19
+    median_images_per_project: 30.7
+  variants: []
+- cms: imaginator
+  best:
+    combo:
+      cms: imaginator
+      url_pattern: défaut
+      discovery: sitemap
+      chrome_tls: false
+      image_paths: défaut
+      thumb_strip: défaut
+    sites: 1
+    successes: 1
+    success_rate: 1.0
+    score: 0.207
+    median_projects: 1391
+    median_images_per_project: 0.9
+  variants: []
+- cms: django_filer
+  best:
+    combo:
+      cms: django_filer
+      url_pattern: défaut
+      discovery: page de liste
+      chrome_tls: true
+      image_paths: défaut
+      thumb_strip: défaut
+    sites: 1
+    successes: 0
+    success_rate: 0.0
+    score: 0.0
+    median_projects: 289
+    median_images_per_project: 8.2
+  variants: []
+- cms: drupal
+  best:
+    combo:
+      cms: drupal
+      url_pattern: ^/(?:[a-z]{2}/)?(?:referenzen|references|projekt|projekte|projects|project|werk|werke|portfolio)/[^/]+/?$
+      discovery: sitemap
+      chrome_tls: false
+      image_paths: défaut
+      thumb_strip: défaut
+    sites: 1
+    successes: 0
+    success_rate: 0.0
+    score: 0.0
+    median_projects: 201
+    median_images_per_project: 6.8
+  variants: []
+sites: {}

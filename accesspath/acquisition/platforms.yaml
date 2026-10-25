@@ -1,0 +1,205 @@
+# Plateformes logicielles connues, communes à toutes les études.
+# Une plateforme reconnue donne sa recette d'accès, ses instances et la source du savoir.
+# Détection (accesspath/acquisition/platforms.py) :
+#   hosts     : motifs de nom d'hôte (fnmatch) propres à la plateforme ;
+#   instances : hôte et préfixe de chemin d'une instance sur un hôte partagé ;
+#   html      : marqueurs dans la page d'accueil ;
+#   headers   : noms d'en-têtes de réponse ; cookies : noms de cookies posés.
+# Un marqueur commun à plusieurs plateformes (un cookie XSRF-TOKEN seul) ne suffit pas.
+version: 1
+platforms:
+  chregister:
+    domain: registres du commerce
+    description: Portails cantonaux <cc>.chregister.ch, pile JSF et PrimeFaces 13, sans API REST.
+    detect:
+      hosts: ["*.chregister.ch"]
+      html: ["/cr-portal/", "javax.faces.ViewState"]
+    recipe:
+      tier: 2
+      barrier: >-
+        Depuis octobre 2026, CAPTCHA FortiADC sur les 24 instances : toute requête reçoit un 302 vers
+        /fortiadc_captcha/index.html (servi en 200), en-têtes de navigateur ou non ; Chrome sans fenêtre fige
+        sur la page. Recette ci-dessous hors d'usage sans geste humain ; Zefix reste ouvert.
+      discovery: Zefix énumère les entreprises et renvoie vers le registre cantonal (cantonalExcerptWeb).
+      endpoints:
+        - GET /cr-portal/auszug/auszug.xhtml?uid=CHE-XXX.XXX.XXX (coquille HTML et ViewState)
+        - POST /cr-portal/auszug/auszug.xhtml (réponse partielle XML, fiche en HTML dans un CDATA)
+      auth: ViewState JSF lu au GET et renvoyé au POST ; pas de compte.
+      format: Fiche identique sur toutes les instances ; un seul analyseur.
+    instances:
+      count: 25
+      list: [AG, AI, AR, BE, BL, BS, GL, GR, JU, LU, NW, OW, SG, SH, SO, SZ, TG, TI, UR, ZG, ZH, VC, VB, VO]
+    source: scripts/rc_graph/adapters/chregister.py
+  hrc-internet:
+    domain: registres du commerce
+    description: Application Angular et API REST publique partagée par plusieurs cantons romands.
+    detect:
+      instances:
+        - {host: rcnet.ne.ch, prefix: "/", label: NE}
+        - {host: prestations.vd.ch, prefix: /pub/101266, label: VD}
+        - {host: app2.ge.ch, prefix: /ecohrcinternet, label: GE}
+        - {host: adm.appls.fr.ch, prefix: /hrcmatic, label: FR (à confirmer)}
+    recipe:
+      tier: 1
+      discovery: POST {préfixe}/api/public/companies/search ; catalogues des communes et des formes juridiques.
+      endpoints:
+        - GET {préfixe}/api/public/catalog/configuration
+        - GET {préfixe}/api/public/catalog/municipalities/FR
+        - POST {préfixe}/api/public/companies/search
+        - POST {préfixe}/api/public/hrcexcerpts/
+      auth: Cookie XSRF-TOKEN posé par un GET sur la racine, renvoyé dans l'en-tête X-XSRF-TOKEN des POST.
+      format: Réponse identique sur tous les cantons (hrcentId, uid, name, seat, legalFormCode, status).
+    instances:
+      count: 4
+      list: [NE, VD, GE, FR]
+    source: scripts/rc_graph/adapters/hrc_internet.py
+  zefix:
+    domain: registres du commerce
+    description: Index central des raisons de commerce ; API REST interne du frontend, sans authentification.
+    detect:
+      hosts: [www.zefix.ch, zefix.ch]
+    recipe:
+      tier: 1
+      discovery: Préfixes de trois caractères (aaa à zzz), pagination par offset jusqu'à hasMoreResults faux.
+      endpoints:
+        - POST /ZefixREST/api/v1/firm/search.json
+      auth: Aucune.
+      format: "Limites : nom de 3 caractères au moins, 5000 résultats par page, aucun filtre de canton (filtrer par cantonalExcerptWeb)."
+    instances:
+      count: 1
+      list: [CH]
+    source: scripts/rc_graph/adapters/zefix.py
+  i-web:
+    domain: communes
+    description: CMS de communes suisses (i-web.ch), images servies par un CDN Thumbor (pcdn*.i-web.ch).
+    detect:
+      html: ["pcdn1.i-web.ch", "pcdn2.i-web.ch", ".i-web.ch/"]
+    recipe:
+      tier: 2
+      discovery: HTML statique ; sitemap selon l'instance.
+      auth: Aucune pour le contenu public. Un formulaire de connexion figure sur chaque page (espace citoyen) ; ce n'est pas un mur de connexion (accesspath login_wall).
+      format: Images redimensionnées par URL Thumbor (/<signature>/<largeur>x<hauteur>/smart/...).
+    instances:
+      count: null
+      list: []
+    source: étude des communes suisses, 2026-10-24 (accesspath/sap_inspect.py login_wall)
+  wordpress:
+    domain: sites web (studios, médias, communes)
+    description: CMS WordPress.
+    detect:
+      html: ["/wp-content/", "/wp-includes/", "https://api.w.org/"]
+    recipe:
+      tier: 1
+      discovery: API REST /wp-json/wp/v2/types puis /wp-json/wp/v2/<type> (X-WP-Total) ; sitemap Yoast.
+      endpoints:
+        - GET /wp-json/wp/v2/types
+        - GET /wp-json/wp/v2/<rest_base>?per_page=100
+      auth: Aucune ; un type de contenu peut ne pas être exposé (404).
+      format: Profil de CMS et gabarits classés dans accesspath/acquisition/websites.yaml (cms_profiles.wordpress, templates).
+    instances:
+      count: null
+      list: []
+    source: accesspath/acquisition/websites.yaml
+  squarespace:
+    domain: sites web (studios)
+    description: Plateforme Squarespace.
+    detect:
+      html: ["static1.squarespace.com", "squarespace-cdn.com"]
+    recipe:
+      tier: 1
+      discovery: Ajouter ?format=json à une page de collection.
+      auth: Aucune.
+      format: Images sur images.squarespace-cdn.com ; ?format=<largeur>w ou original.
+    instances:
+      count: null
+      list: []
+    source: accesspath/acquisition/websites.yaml (cms_profiles.squarespace)
+  typo3:
+    domain: sites web (studios, communes)
+    description: CMS TYPO3.
+    detect:
+      html: ["/typo3conf/", "/typo3temp/", "/fileadmin/"]
+    recipe:
+      tier: 2
+      discovery: Sitemap (seo extension) ; HTML statique.
+      auth: Aucune.
+      format: Images sous /fileadmin/ et /_processed_/ (miniatures).
+    instances:
+      count: null
+      list: []
+    source: accesspath/acquisition/websites.yaml (cms_profiles.typo3)
+  imaginator:
+    domain: sites web (studios)
+    description: CMS suisse propriétaire, pages en ?template=progetti_img&id=N.
+    detect:
+      html: ["showSitemap.php", "imaginator_progetti"]
+    recipe:
+      tier: 2
+      discovery: Sitemap /showSitemap.php ; une URL de contenu et une URL de titre par projet.
+      auth: Aucune.
+      format: Images relatives (opere_images/...) ; dédoublonner par titre.
+    instances:
+      count: null
+      list: []
+    source: accesspath/acquisition/websites.yaml (cms_profiles.imaginator)
+  wix:
+    domain: sites web (studios)
+    description: Plateforme Wix ; pages rendues côté serveur, médias sur static.wixstatic.com.
+    detect:
+      html: ['content="Wix.com', "static.parastorage.com", "static.wixstatic.com"]
+    recipe:
+      tier: 2
+      discovery: "/sitemap.xml est un index : pages-sitemap.xml, puis un sitemap par collection dynamique (dynamic-<collection>_p_<id>-sitemap.xml) ; les pages de collection sont les contenus."
+      auth: Aucune.
+      format: HTML rendu côté serveur ; état de la page dans <script id="wix-warmup-data"> (JSON).
+      images: "static.wixstatic.com/media/<id>~mv2.<ext>/v1/fill/w_…,h_…/… : retirer à partir de /v1/ donne l'original."
+    instances:
+      count: 48
+      list: []
+    source: campagne de sites web 2026-10 (motif appris, recette vérifiée sur 2 sites)
+  webflow:
+    domain: sites web (studios)
+    description: Plateforme Webflow ; HTML statique, attributs data-wf-site et data-wf-page.
+    detect:
+      html: ["data-wf-site", 'content="Webflow"', "cdn.prod.website-files.com"]
+    recipe:
+      tier: 2
+      discovery: /sitemap.xml quand le site l'active (absent sur un site sur deux vérifiés) ; sinon les liens des pages de collection (/<collection>/<slug>).
+      auth: Aucune pour le HTML ; l'API CMS de Webflow exige un jeton du propriétaire.
+      format: HTML statique.
+      images: "cdn.prod.website-files.com/<site>/<id>_<nom>-p-500.<ext> : retirer -p-<largeur> donne l'original."
+    instances:
+      count: 11
+      list: []
+    source: campagne de sites web 2026-10 (motif appris, recette vérifiée sur 2 sites)
+  drupal:
+    domain: sites web (studios, communes)
+    description: CMS Drupal (9 à 11 observés).
+    detect:
+      html: ['content="Drupal', "drupal-settings-json", "/sites/default/files/"]
+      headers: [X-Drupal-Cache, X-Drupal-Dynamic-Cache]
+    recipe:
+      tier: 1
+      discovery: /sitemap.xml (module simple_sitemap) ; /rss.xml souvent ouvert ; JSON:API (/jsonapi) fermé sur les 3 sites vérifiés.
+      auth: Aucune.
+      format: HTML rendu côté serveur ; réglages de page dans <script data-drupal-selector="drupal-settings-json">.
+      images: "/sites/default/files/styles/<style>/public/<chemin>?itok=… : retirer styles/<style>/public/ et la requête donne l'original."
+    instances:
+      count: 16
+      list: []
+    source: campagne de sites web 2026-10 (motif appris, recette vérifiée sur 3 sites)
+  contao:
+    domain: sites web (studios)
+    description: CMS Contao, d'origine allemande, fréquent en Suisse alémanique.
+    detect:
+      html: ['content="Contao', "/assets/contao/"]
+    recipe:
+      tier: 1
+      discovery: robots.txt déclare /sitemap.xml (3 sites sur 3 vérifiés).
+      auth: Aucune.
+      format: HTML rendu côté serveur.
+      images: "Miniatures dans /assets/images/<x>/<nom>-<empreinte>.<ext> ; l'original vit sous /files/, à un chemin que la miniature ne donne pas."
+    instances:
+      count: 11
+      list: []
+    source: campagne de sites web 2026-10 (motif appris, recette vérifiée sur 3 sites)

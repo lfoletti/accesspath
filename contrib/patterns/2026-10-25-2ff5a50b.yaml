@@ -1,0 +1,136 @@
+version: 1
+contributed: '2026-10-25'
+patterns:
+- kind: platform
+  name: cmsbox
+  markers:
+  - kind: generator
+    marker: cmsbox
+  sites: 5
+- kind: platform
+  name: contao
+  markers:
+  - kind: generator
+    marker: contao
+  sites: 7
+- kind: platform
+  name: craft
+  markers:
+  - kind: generator
+    marker: craft
+  sites: 4
+- kind: platform
+  name: dlv4t0z5skgwv.cloudfront.net
+  markers:
+  - kind: asset_host
+    marker: dlv4t0z5skgwv.cloudfront.net
+  sites: 3
+- kind: platform
+  name: drupal
+  markers:
+  - kind: generator
+    marker: drupal
+  sites: 9
+- kind: platform
+  name: freight.cargo.site
+  markers:
+  - kind: asset_host
+    marker: freight.cargo.site
+  - kind: asset_host
+    marker: static.cargo.site
+  sites: 4
+- kind: platform
+  name: jimdo
+  markers:
+  - kind: generator
+    marker: jimdo
+  - kind: asset_host
+    marker: assets.jimstatic.com
+  - kind: asset_host
+    marker: fonts.jimstatic.com
+  - kind: asset_host
+    marker: image.jimcdn.com
+  - kind: asset_host
+    marker: u.jimcdn.com
+  sites: 5
+- kind: platform
+  name: joomla!
+  markers:
+  - kind: generator
+    marker: joomla!
+  sites: 5
+- kind: platform
+  name: silverstripe
+  markers:
+  - kind: generator
+    marker: silverstripe
+  sites: 6
+- kind: platform
+  name: webflow
+  markers:
+  - kind: generator
+    marker: webflow
+  - kind: asset_host
+    marker: cdn.prod.website-files.com
+  - kind: asset_host
+    marker: d3e54v103j8qbb.cloudfront.net
+  sites: 11
+- kind: platform
+  name: weblication®
+  markers:
+  - kind: generator
+    marker: weblication®
+  sites: 4
+- kind: platform
+  name: wix.com
+  markers:
+  - kind: generator
+    marker: wix.com
+  - kind: asset_host
+    marker: static.parastorage.com
+  - kind: asset_host
+    marker: static.wixstatic.com
+  sites: 36
+- kind: content_url
+  regex: ^/hospitality/[^/]+/?$
+  sites: 2
+- kind: content_url
+  regex: ^/post/[^/]+/?$
+  sites: 2
+- kind: content_url
+  regex: ^/projektauswahl/[^/]+/?$
+  sites: 3
+- kind: content_url
+  regex: ^/werkliste/[^/]+/?$
+  sites: 3
+- kind: content_url
+  regex: ^/wettbewerbe/[^/]+/?$
+  sites: 5
+- kind: platform
+  name: cdn.myportfolio.com
+  markers:
+  - kind: asset_host
+    marker: cdn.myportfolio.com
+  sites: 3
+- kind: platform
+  name: cdn.sanity.io
+  markers:
+  - kind: asset_host
+    marker: cdn.sanity.io
+  sites: 5
+- kind: platform
+  name: framer
+  markers:
+  - kind: generator
+    marker: framer
+  - kind: asset_host
+    marker: events.framer.com
+  - kind: asset_host
+    marker: framerusercontent.com
+  sites: 3
+- kind: content_url
+  regex: ^/publications/[^/]+/?$
+  sites: 2
+- kind: content_url
+  regex: ^/wettbewerb/[^/]+/?$
+  sites: 2

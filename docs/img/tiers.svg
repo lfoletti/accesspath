@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 300" width="900" height="300" role="img" aria-labelledby="title desc">
+  <title id="title">accesspath access tiers</title>
+  <desc id="desc">A pyramid of five access tiers. accesspath tries them from the base to the top and keeps the first tier that works: tier 1 API or feed, tier 2 static HTML, tier 3 login, tier 4 browser, tier 5 no machine access. Tier 1 is stable and low cost, without a parser. Tier 2 needs a parser to maintain. Tier 3 needs human engagement: an account and consent. Tier 4 is slow and fragile, with a human step for challenges. Tier 5 has no machine access: a human session, an archive copy or a request to the owner.</desc>
+  <style>
+    .box { fill: #eef2ff; stroke: #4338ca; stroke-width: 1.5; }
+    .core { fill: #312e81; stroke: #312e81; }
+    .line { fill: none; stroke: #4338ca; stroke-width: 1.5; }
+    .apex { fill: none; stroke: #4338ca; stroke-width: 1.5; stroke-dasharray: 5 4; }
+    .dots { fill: none; stroke: #a5b4fc; stroke-width: 1; stroke-dasharray: 3 4; }
+    .head { fill: #4338ca; }
+    text { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1e1b4b; }
+    .label { font-size: 14px; }
+    .small { font-size: 13px; }
+    .title { font-size: 14px; font-weight: 600; fill: #ffffff; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12.5px; fill: #312e81; }
+    .note { font-size: 12px; fill: #4338ca; }
+    @media (prefers-color-scheme: dark) {
+      .box { fill: #1e1b4b; stroke: #a5b4fc; }
+      .core { fill: #4338ca; stroke: #a5b4fc; }
+      .line { stroke: #a5b4fc; }
+      .apex { fill: none; stroke: #4338ca; stroke-width: 1.5; stroke-dasharray: 5 4; }
+    .dots { stroke: #818cf8; }
+      .head { fill: #a5b4fc; }
+      text { fill: #e0e7ff; }
+      .mono { fill: #e0e7ff; }
+      .note { fill: #c7d2fe; }
+    }
+  </style>
+
+  <!-- Order of the tries, from the base to the top -->
+  <path class="line" d="M40 258 L 40 44"/>
+  <path class="head" d="M40 33 L 34.5 44 L 45.5 44 Z"/>
+  <text class="note" x="24" y="150" text-anchor="middle" transform="rotate(-90 24 150)">first tier that works</text>
+
+  <!-- Pyramid: tier 1 at the base, tier 5 at the apex -->
+  <polygon class="box core" points="70.0,260 510.0,260 471.7,220 108.3,220"/>
+  <text class="title" x="290" y="245" text-anchor="middle" style="fill:#ffffff">Tier 1 · API or feed</text>
+  <polygon class="box" points="113.0,215 467.0,215 428.7,175 151.3,175"/>
+  <text class="label" x="290" y="200" text-anchor="middle">Tier 2 · static HTML</text>
+  <polygon class="box" points="156.1,170 423.9,170 385.7,130 194.3,130"/>
+  <text class="label" x="290" y="155" text-anchor="middle">Tier 3 · login</text>
+  <polygon class="box" points="199.1,125 380.9,125 342.6,85 237.4,85"/>
+  <text class="small" x="290" y="110" text-anchor="middle">Tier 4 · browser</text>
+  <polygon class="apex" points="242.2,80 337.8,80 290,30"/>
+  <text class="note" x="290" y="72" text-anchor="middle">Tier 5</text>
+
+  <!-- How to get each tier -->
+  <text class="mono" x="290" y="290" text-anchor="middle">HTTP for tiers 1 to 3 · Chrome for tier 4 · a person for tier 5</text>
+
+  <!-- What each tier means for the collector -->
+  <text class="note" x="560" y="22">What it means</text>
+  <path class="dots" d="M495 240 L 548 240"/>
+  <text class="mono" x="560" y="236">stable, low cost</text>
+  <text class="mono" x="560" y="252">no parser</text>
+  <path class="dots" d="M452 195 L 548 195"/>
+  <text class="mono" x="560" y="191">parser to maintain</text>
+  <text class="mono" x="560" y="207">when the site changes</text>
+  <path class="dots" d="M409 150 L 548 150"/>
+  <text class="mono" x="560" y="146">human engagement</text>
+  <text class="mono" x="560" y="162">necessary: account, consent</text>
+  <path class="dots" d="M366 105 L 548 105"/>
+  <text class="mono" x="560" y="101">slow and fragile</text>
+  <text class="mono" x="560" y="117">human step for challenges</text>
+  <path class="dots" d="M325 62 L 548 62"/>
+  <text class="mono" x="560" y="58">no machine access</text>
+  <text class="mono" x="560" y="74">human, archive or owner</text>
+</svg>

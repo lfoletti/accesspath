@@ -1,0 +1,2 @@
+# Faux positifs de gitleaks, revus à la création du dépôt (gitleaks 8.30.1).
+# Une empreinte = commit:fichier:règle:ligne ; à régénérer si l'historique est réécrit.
