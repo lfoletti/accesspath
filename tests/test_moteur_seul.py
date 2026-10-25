@@ -149,3 +149,21 @@ def test_fichier_complet_par_variable(monkeypatch, tmp_path):
     finally:
         monkeypatch.delenv("ACCESSPATH_PATTERNS")
         importlib.reload(patterns)
+
+
+def test_un_projet_ajoute_ses_commandes(capsys):
+    vus = []
+
+    def extend(sub):
+        run = sub.add_parser("run")
+        run.add_argument("site")
+
+    def cmd_run(args):
+        vus.append(args.site)
+        return 7
+
+    assert cli.main(["run", "site_a"], extend=extend, dispatch={"run": cmd_run}, prog="atelier") == 7
+    assert vus == ["site_a"]
+    with pytest.raises(SystemExit):
+        cli.main(["run", "site_a"])  # le moteur seul ne connaît pas `run`
+    assert "atelier" in cli.build_parser(extend, "atelier").format_usage()

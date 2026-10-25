@@ -370,14 +370,6 @@ async def _revoir_gestes(names: list[str]) -> int:
     return 0
 
 
-def _queue_warmup(site, reason: str) -> None:
-    """Profil froid sans humain présent : un ticket plutôt qu'un échec muet."""
-    from . import gestures, human
-
-    if gestures.add(site.name, "warmup", human._home_url(site), reason):
-        print(f"  ✋ [{site.name}] geste ajouté à la file : python -m accesspath gestes")
-
-
 def cmd_sap(args: argparse.Namespace) -> int:
     from ._safe import (
         UnsafeInput,
@@ -650,8 +642,9 @@ def cmd_sap(args: argparse.Namespace) -> int:
 
 
 # ── Parser ────────────────────────────────────────────────────────────────
-def build_parser() -> argparse.ArgumentParser:
-    p = argparse.ArgumentParser(prog="accesspath")
+def build_parser(extend=None, prog: str = "accesspath") -> argparse.ArgumentParser:
+    """Parseur du moteur ; `extend(sub)` ajoute les sous-commandes d'un projet de collecte."""
+    p = argparse.ArgumentParser(prog=prog)
     sub = p.add_subparsers(dest="cmd", required=True)
 
     warm = sub.add_parser("warmup", help="lance Chrome headed, warmup interactif")
@@ -795,6 +788,8 @@ def build_parser() -> argparse.ArgumentParser:
         help="inspect : émet aussi data/sap/<name>/{01..04}_*.yaml (V2 sharded profile) ; exige --save",
     )
 
+    if extend is not None:
+        extend(sub)
     return p
 
 
@@ -815,11 +810,12 @@ DISPATCH = {
 }
 
 
-def main(argv: list[str] | None = None) -> int:
-    parser = build_parser()
+def main(argv: list[str] | None = None, *, extend=None, dispatch: dict | None = None, prog: str = "accesspath") -> int:
+    """Point d'entrée ; un projet de collecte passe ses sous-commandes (`extend`, `dispatch`)."""
+    parser = build_parser(extend, prog)
     args = parser.parse_args(argv)
     _setup_logging()
-    return DISPATCH[args.cmd](args)
+    return {**DISPATCH, **(dispatch or {})}[args.cmd](args)
 
 
 if __name__ == "__main__":
