@@ -698,8 +698,8 @@ def _analyze_link_architecture(anchors: list[dict], base_url: str) -> LinkArchit
 
     parsed_base = urlparse(base_url)
     base_host = parsed_base.netloc
-    # Same-domain = même host OU sous-domaines proches (ex: ztat.net pour
-    # zalando.ch — même eTLD+1 simple). Heuristique : on garde les domaines
+    # Same-domain = même host OU sous-domaines proches (ex: img01.boutique.ch pour
+    # www.boutique.ch — même eTLD+1 simple). Heuristique : on garde les domaines
     # se terminant par le eTLD+1 (split sur dot, dernier 2-3 segments).
     base_etld = ".".join(base_host.split(".")[-2:])
 
@@ -952,8 +952,8 @@ def _recommend_tier_core(
     # Auth wall — Tier 3 (HTTP loggé via session warmed)
     # `requires_login` seul suffit comme signal (login form OU login link sur home).
     # `robots_disallows_root` est un renforcement (le site interdit explicitement le crawl
-    # public) mais pas une exigence : architizer.com par exemple disallow / + requires_login,
-    # mais runway.com requires_login sans robots Disallow — les deux justifient T3.
+    # public) mais pas une exigence : un site peut avoir disallow / + requires_login,
+    # un autre requires_login sans robots Disallow — les deux justifient T3.
     if requires_login:
         rationale = "Auth wall détecté (requires_login marker)"
         if robots_disallows_root:
@@ -2134,7 +2134,7 @@ def _predict_category(
         return CategoryPrediction("ecommerce", sub, 0.85, reasons)
 
     # Curated fashion-luxury e-commerce domain hints fallback (for homepages that
-    # don't expose Schema Product / cart elements, e.g. mytheresa/farfetch/zalando carousel-only home).
+    # don't expose Schema Product / cart elements, e.g. a carousel-only home of a large fashion retailer).
     if any(h in url_low for h in _FASHION_ECOMMERCE_DOMAIN_HINTS):
         add(f"curated fashion/luxury e-commerce domain match ({url_low})")
         return CategoryPrediction("ecommerce", "fashion_luxury", 0.7, reasons)
@@ -2586,7 +2586,7 @@ async def inspect(
         report.knn_prior = _knn_corpus_lookup(url, target_signals, k=5)
         # Bridge kNN → category only when consensus is robust :
         #   - rules-based confidence < 0.5 (uncertain)
-        #   - at least 2 voting neighbors (avoid single-neighbor extrapolation, cf. runway.com bug)
+        #   - at least 2 voting neighbors (avoid single-neighbor extrapolation)
         #   - top neighbor score ≥ 0.6 (avoid weak matches)
         knn = report.knn_prior
         if (

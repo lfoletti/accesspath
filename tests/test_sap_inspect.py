@@ -268,7 +268,7 @@ def test_recommend_tier2_when_ssr_with_sitemap():
 
 
 def test_recommend_tier4_when_akamai_plus_spa():
-    """Akamai + SPA est typique zalando — Tier 4 marionnette."""
+    """Akamai + SPA est typique d'une grande boutique en ligne — Tier 4 marionnette."""
     rec = _recommend_tier(
         reachability=Reachability(status="OK", body_length=50000),
         anti_bot=_make_anti_bot(akamai="akam path"),
@@ -384,14 +384,14 @@ def test_analyze_link_architecture_basic():
 
 
 def test_analyze_link_architecture_handles_subdomain():
-    """ztat.net pour zalando.ch — même eTLD+1 → considéré same-domain."""
+    """img01.boutique.ch pour www.boutique.ch — même eTLD+1 → considéré same-domain."""
     anchors = [
-        {"href": "https://www.zalando.ch/article", "text": "x", "section": "main"},
-        {"href": "https://img01.zalando.ch/img.jpg", "text": "img", "section": "main"},
+        {"href": "https://www.boutique.ch/article", "text": "x", "section": "main"},
+        {"href": "https://img01.boutique.ch/img.jpg", "text": "img", "section": "main"},
         {"href": "https://google.com", "text": "g", "section": "footer"},
     ]
-    arch = _analyze_link_architecture(anchors, "https://www.zalando.ch/")
-    # Les 2 premiers same-domain (zalando.ch base eTLD), google.com external
+    arch = _analyze_link_architecture(anchors, "https://www.boutique.ch/")
+    # Les 2 premiers same-domain (boutique.ch base eTLD), google.com external
     assert arch.same_domain_count == 2
     assert "google.com" in arch.external_domains
 

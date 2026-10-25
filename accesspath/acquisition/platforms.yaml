@@ -29,7 +29,7 @@ platforms:
     instances:
       count: 25
       list: [AG, AI, AR, BE, BL, BS, GL, GR, JU, LU, NW, OW, SG, SH, SO, SZ, TG, TI, UR, ZG, ZH, VC, VB, VO]
-    source: scripts/rc_graph/adapters/chregister.py
+    source: campagne des registres du commerce 2026-10
   hrc-internet:
     domain: registres du commerce
     description: Application Angular et API REST publique partagée par plusieurs cantons romands.
@@ -52,7 +52,7 @@ platforms:
     instances:
       count: 4
       list: [NE, VD, GE, FR]
-    source: scripts/rc_graph/adapters/hrc_internet.py
+    source: campagne des registres du commerce 2026-10
   zefix:
     domain: registres du commerce
     description: Index central des raisons de commerce ; API REST interne du frontend, sans authentification.
@@ -68,7 +68,7 @@ platforms:
     instances:
       count: 1
       list: [CH]
-    source: scripts/rc_graph/adapters/zefix.py
+    source: campagne des registres du commerce 2026-10
   i-web:
     domain: communes
     description: CMS de communes suisses (i-web.ch), images servies par un CDN Thumbor (pcdn*.i-web.ch).

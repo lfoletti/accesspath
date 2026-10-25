@@ -22,11 +22,11 @@ def data(tmp_path, monkeypatch):
 
 
 def test_un_ticket_par_site_ouvert(data):
-    assert gestures.add("vogue_com", "challenge", "https://www.vogue.com/", "403 cloudflare")
-    assert not gestures.add("vogue_com", "challenge", "https://www.vogue.com/", "encore")
-    assert [g.site for g in gestures.pending()] == ["vogue_com"]
+    assert gestures.add("magazine_ch", "challenge", "https://www.magazine.ch/", "403 cloudflare")
+    assert not gestures.add("magazine_ch", "challenge", "https://www.magazine.ch/", "encore")
+    assert [g.site for g in gestures.pending()] == ["magazine_ch"]
     g = gestures.pending()[0]
-    assert (g.kind, g.open_url, g.reason) == ("challenge", "https://www.vogue.com/", "403 cloudflare")
+    assert (g.kind, g.open_url, g.reason) == ("challenge", "https://www.magazine.ch/", "403 cloudflare")
 
 
 def test_resolu_puis_rouvert(data):

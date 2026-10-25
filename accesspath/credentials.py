@@ -2,7 +2,7 @@
 
 Format attendu :
 {
-  "runway": {"email": "...", "password": "..."},
+  "site_exemple": {"email": "...", "password": "..."},
   "other_site": {...}
 }
 

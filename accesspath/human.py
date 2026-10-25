@@ -99,7 +99,7 @@ def _home_url(site: object) -> str:
     """URL de home pour le warmup : 1re catégorie OU URL de seed OU guess."""
     if site.categories:
         return site.categories[0].url_template.format(1)
-    # Les sites seed-URL (runway) n'ont pas de categories — hack : on utilise
+    # Les sites à URL de départ (seed) n'ont pas de categories — hack : on utilise
     # l'URL de base du domaine, l'utilisateur finira la navigation.
 
     try:
