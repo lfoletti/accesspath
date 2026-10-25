@@ -33,3 +33,11 @@ tests that your change touches. Do not bypass it with `--no-verify`.
 - One subject for each pull request. Explain why, not only what.
 - Learned patterns: `python -m accesspath sap patterns share --send` opens a pull request that adds a file to
   `contrib/patterns/`. See [docs/patterns.md](docs/patterns.md).
+
+## Where to start
+
+- Issues with the label [`good first issue`](https://github.com/lfoletti/accesspath/labels/good%20first%20issue) are
+  small and self-contained.
+- Questions and ideas go to [Discussions](https://github.com/lfoletti/accesspath/discussions); vulnerabilities go to
+  the private report (see [SECURITY.md](SECURITY.md)).
+- Everyone who takes part follows the [code of conduct](CODE_OF_CONDUCT.md).
