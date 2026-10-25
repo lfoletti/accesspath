@@ -1,5 +1,9 @@
 # accesspath
 
+[![CI](https://github.com/lfoletti/accesspath/actions/workflows/ci.yml/badge.svg)](https://github.com/lfoletti/accesspath/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/github/license/lfoletti/accesspath)](LICENSE)
+[![Release](https://img.shields.io/github/v/release/lfoletti/accesspath)](https://github.com/lfoletti/accesspath/releases)
+
 accesspath audits a website for two readers. For a **collector**, it finds the simplest way to read the content: a feed, an API, a sitemap, static HTML, or a browser as the last step. For the **site owner**, it shows what the site exposes to machines and how it is protected, with recommendations. It is the engine of the Claude Code skill `/sap`.
 
 ## What it does

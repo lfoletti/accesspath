@@ -1,0 +1,21 @@
+name: Feature request
+description: A new check, a new access point, a better report.
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: need
+    attributes:
+      label: The need
+      description: What you want to know about a site, and for whom (collector or site owner).
+    validations:
+      required: true
+  - type: textarea
+    id: example
+    attributes:
+      label: Example
+      description: A site or a case where accesspath misses it today.
+  - type: textarea
+    id: idea
+    attributes:
+      label: Idea
+      description: How accesspath could find or report it.

@@ -1,0 +1,30 @@
+name: Bug report
+description: accesspath gives a wrong result, fails, or stops.
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: The command you ran, and what you saw. Paste the error or the relevant part of the report.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+    validations:
+      required: true
+  - type: input
+    id: url
+    attributes:
+      label: Site
+      description: The address you audited, if you can share it. Do not paste credentials or private addresses.
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Release (`v0.1.0`) or commit, Python version and operating system.
+    validations:
+      required: true
