@@ -23,7 +23,7 @@ inspect = [
 ]
 # Empreinte TLS Chrome (curl_cffi) et décompression br
 tls = [
-    "curl_cffi>=0.15,<0.17",  # 0.17 n'envoie plus l'en-tête User-Agent de l'empreinte imitée
+    "curl_cffi>=0.15,<0.18",  # 0.17 : en-têtes de l'empreinte en minuscules (Chrome 152)
     "brotli>=1.2.1",
 ]
 # Gestes humains et préparation des profils (warmup, gestes)
