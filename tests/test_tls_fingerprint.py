@@ -30,16 +30,18 @@ def test_imitation_lit_une_page():
 
 
 def test_imitation_envoie_une_empreinte_de_navigateur():
-    seen = {}
+    # Noms d'en-têtes lus sans la casse : depuis curl_cffi 0.17, l'empreinte Chrome 152
+    # les envoie en minuscules (« user-agent »).
+    seen = httpx.Headers()
 
     def h(req):
-        seen.update(req.headers)
+        seen.update(list(req.headers.items()))
         _send(req, 200, b"ok", {"Content-Type": "text/plain"})
 
     with LocalServer({"/": h}) as s:
         asyncio.run(_http.aimpersonate_get(s.url("/"), headers={"Accept": "text/html"}))
     assert "Chrome" in seen.get("User-Agent", "")
-    assert seen.get("Accept") == "text/html"
+    assert seen.get_list("Accept") == ["text/html"]  # celui de l'appelant, sans doublon de l'empreinte
 
 
 def test_imitation_garde_chaque_redirection(monkeypatch):
