@@ -756,6 +756,16 @@ async def discover_tier1(
 
 
 # ── Tier 2 : analyse HTML statique ─────────────────────────────────────────
+SPA_MAX_WORDS = 50
+SPA_EMPTY_ROOT = re.compile(r'<(app-root|div id="(?:root|app|__next|__nuxt)")[^>]*>\s*</', re.I)
+
+
+def visible_words(html: str) -> int:
+    """Le nombre de mots visibles : le texte hors des scripts, des styles et des balises."""
+    t = re.sub(r"<(script|style|noscript|template)\b[^>]*>.*?</\1>", " ", html, flags=re.S | re.I)
+    return len(re.sub(r"<[^>]+>", " ", t).split())
+
+
 async def discover_tier2(url: str, *, home: dict | None = None) -> dict:
     """Fetch l'URL principale et analyse :
     - framework signatures (WP, Next.js __NEXT_DATA__, Apollo, Hotwire/Turbo)
@@ -788,7 +798,8 @@ async def discover_tier2(url: str, *, home: dict | None = None) -> dict:
         out["frameworks"].append("rails_turbo")
     if "data-react-helmet" in html or "react-root" in html or 'id="root"' in html:
         out["frameworks"].append("react")
-    if "ng-version" in html or "ng-app" in html:
+    # Angular CLI récent : ni ng-version ni ng-app dans le HTML servi, seulement l'élément racine <app-root>.
+    if "ng-version" in html or "ng-app" in html or "<app-root" in html:
         out["frameworks"].append("angular")
     if "data-vue" in html or "v-cloak" in html:
         out["frameworks"].append("vue")
@@ -820,7 +831,12 @@ async def discover_tier2(url: str, *, home: dict | None = None) -> dict:
     # SPA heuristic : peu de patterns "data" + framework JS détecté
     has_js_framework = any(f in out["frameworks"] for f in ("react", "nextjs", "angular", "vue"))
     low_content = out["patterns"]["links_with_id"] < 5 and out["patterns"]["article_tags"] < 5 and len(html) < 200_000
-    out["is_likely_spa"] = has_js_framework and low_content
+    # Coquille vide : élément racine vide et scripts en modules, presque aucun mot visible. La taille du HTML ne
+    # compte pas : une feuille de style en ligne fait passer une coquille au-dessus de 200 Ko (audit du 04.11.2026).
+    out["visible_words"] = visible_words(html)
+    empty_root = bool(SPA_EMPTY_ROOT.search(html)) and 'type="module"' in html
+    shell = (has_js_framework or empty_root) and out["visible_words"] < SPA_MAX_WORDS
+    out["is_likely_spa"] = (has_js_framework and low_content and out["visible_words"] < SPA_MAX_WORDS * 4) or shell
 
     return out
 
@@ -1164,6 +1180,13 @@ def _decide_tier_doors(report: ProbeReport) -> tuple[int, str]:
         return 1, f"{len(t1['api_endpoints'])} endpoint(s) JSON trouvé(s)"
     if t1.get("rss_feeds"):
         return 1, f"{len(t1['rss_feeds'])} RSS/Atom feed(s) trouvé(s)"
+    if t2.get("is_likely_spa"):
+        # Le sitemap d'une SPA énumère des pages vides : la voie est l'API que l'application appelle.
+        return 4, (
+            "Site SPA : le HTML est une coquille vide ; chercher l'API de données dans le code de l'application "
+            "(scripts lus comme texte, jamais exécutés), sinon Chrome"
+            + (" ; le sitemap énumère seulement des adresses" if t1.get("sitemap") else "")
+        )
     if t1.get("sitemap"):
         return 1, "Sitemap XML disponible (utile pour énumération URLs)"
     if t2.get("inline_json"):
@@ -1171,8 +1194,6 @@ def _decide_tier_doors(report: ProbeReport) -> tuple[int, str]:
             2,
             f"Inline JSON détecté ({', '.join(j['marker'] for j in t2['inline_json'])})",
         )
-    if t2.get("is_likely_spa"):
-        return 4, "Site SPA sans alternative API — Chrome render nécessaire"
     if t2.get("fetched"):
         return 2, "HTML statique — extracteurs HTML/CSS classiques"
     return 4, "Aucune voie identifiée — tier 4 par défaut"
