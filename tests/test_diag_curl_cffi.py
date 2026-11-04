@@ -35,4 +35,5 @@ def test_diagnostic():
                 except Exception as e:  # noqa: BLE001
                     seen["ERR"] = repr(e)
             out[f"{target}|{bool(hdrs)}"] = {k: v[:60] for k, v in seen.items()}
-    pytest.fail(json.dumps(out, indent=1))
+    if not cc.__version__.startswith("0.16"):          # sur la CI seulement : 0.17 donne son relevé
+        pytest.fail(json.dumps(out, indent=1))
