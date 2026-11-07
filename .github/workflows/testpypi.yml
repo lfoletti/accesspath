@@ -1,0 +1,66 @@
+name: testpypi
+
+# Répétition de la publication sur test.pypi.org, lancée à la main. Le paquet porte la version X.Y.Z.dev<numéro du
+# run> : un numéro ne sert qu'une fois sur un index. Puis il s'installe depuis TestPyPI (ses dépendances depuis PyPI)
+# et sa commande répond.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  construire:
+    runs-on: ubuntu-24.04
+    outputs:
+      version: ${{ steps.v.outputs.version }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0  # v7.1.0
+        with:
+          python-version: "3.13"
+      - name: version de répétition
+        id: v
+        run: |
+          v=$(python -c "import tomllib;print(tomllib.load(open('pyproject.toml','rb'))['project']['version'])").dev${{ github.run_id }}
+          sed -i "s/^version = .*/version = \"$v\"/" pyproject.toml
+          echo "version=$v" >> "$GITHUB_OUTPUT"
+      - run: python -m pip install build && python -m build --outdir dist
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7.0.2
+        with:
+          name: paquet
+          path: dist/
+
+  publier:
+    needs: construire
+    runs-on: ubuntu-24.04
+    environment: testpypi
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333  # v8.0.2
+        with:
+          name: paquet
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@7245906fb61fa33a13554f9d5fb856fe61758086  # v1.14.3
+        with:
+          repository-url: https://test.pypi.org/legacy/
+
+  essayer:
+    needs: [construire, publier]
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0  # v7.1.0
+        with:
+          python-version: "3.13"
+      - name: installer depuis TestPyPI, la commande répond
+        run: |
+          python -m venv /tmp/v
+          for i in 1 2 3 4 5 6; do
+            /tmp/v/bin/pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ \
+              "accesspath[tls]==${{ needs.construire.outputs.version }}" && break
+            sleep 30
+          done
+          /tmp/v/bin/accesspath sap --help
