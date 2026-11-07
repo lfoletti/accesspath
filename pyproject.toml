@@ -4,11 +4,11 @@ build-backend = "hatchling.build"
 
 [project]
 name = "accesspath"
-version = "0.1.0"
+version = "0.1.1"
 description = "Website access audit (Site Architecture Profile): the simplest way that works to read a site, and what the site exposes to machines."
 readme = "README.md"
 requires-python = ">=3.11"
-authors = [{ name = "Lauro Foletti" }]
+authors = [{ name = "The accesspath maintainers" }]
 license = "MIT"
 license-files = ["LICENSE"]
 dependencies = [
@@ -42,6 +42,11 @@ dev = [
     "types-PyYAML",
     "pip-audit",
 ]
+
+[project.urls]
+Source = "https://github.com/lfoletti/accesspath"
+Issues = "https://github.com/lfoletti/accesspath/issues"
+Releases = "https://github.com/lfoletti/accesspath/releases"
 
 [project.scripts]
 accesspath = "accesspath.cli:main"

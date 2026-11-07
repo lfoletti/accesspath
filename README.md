@@ -1,7 +1,7 @@
 # accesspath
 
 [![CI](https://github.com/lfoletti/accesspath/actions/workflows/ci.yml/badge.svg)](https://github.com/lfoletti/accesspath/actions/workflows/ci.yml)
-[![License: MIT](https://img.shields.io/github/license/lfoletti/accesspath)](LICENSE)
+[![License: MIT](https://img.shields.io/github/license/lfoletti/accesspath)](https://github.com/lfoletti/accesspath/blob/main/LICENSE)
 [![Release](https://img.shields.io/github/v/release/lfoletti/accesspath)](https://github.com/lfoletti/accesspath/releases)
 
 accesspath audits a website for two readers. For a **collector**, it finds the simplest way to read the content: a feed, an API, a sitemap, static HTML, or a browser as the last step. For the **site owner**, it shows what the site exposes to machines and how it is protected, with recommendations. It is the engine of the Claude Code skill `/sap`.
@@ -12,7 +12,7 @@ Use accesspath before you write a collector, or when a source stops you: a 403, 
 
 accesspath tries the tiers from the base to the top and keeps the first tier that works. Tier 1 is an API or a feed: RSS, Atom, JSON, GraphQL, sitemap. Tier 4 is a single-page application that needs Chrome. Tier 5 is a site that stops Chrome too: a person, an archive copy or the owner must help.
 
-![The five access tiers and what each tier means for a collector](docs/img/tiers.svg)
+![The five access tiers and what each tier means for a collector](https://raw.githubusercontent.com/lfoletti/accesspath/main/docs/img/tiers.svg)
 
 ## Owner report
 
@@ -52,7 +52,7 @@ python -m accesspath sap owner https://www.example.org     # owner report: expos
 python -m accesspath sap probe https://www.example.org --save --skeleton   # keep the profile, write a collector skeleton
 ```
 
-Without the skill, install with `pip install -e ".[inspect,tls]"`; the command `accesspath` is the same as `python -m accesspath`.
+Without the skill, install from PyPI with `pip install "accesspath[inspect,tls]"` (or `pip install -e ".[inspect,tls]"` in a clone); the command `accesspath` is the same as `python -m accesspath`.
 
 You need Python 3.11 or later. `inspect` needs Google Chrome.
 
@@ -80,7 +80,7 @@ Without `--save`, accesspath writes nothing. Use this mode from other projects.
 - **Third-party copies.** When no door opens, `probe` asks the Wayback Machine and Common Crawl for their copies of the site.
 - **Human step.** Some sites need a person: a challenge, a login, a consent page. `inspect` shows "✋ Geste humain requis" and the command to use. With `--save`, the step goes into a queue.
 - **Ghost mode.** Record a browser session as HAR. `ghost --har` finds the data calls and their pagination. `ghost --replay` sends these calls again without a browser. Secrets come from environment variables and accesspath never writes them to disk.
-- **Patterns and templates.** Collector projects and studies leave reusable knowledge: content URL families, CMS profiles, ranked templates (the winning combinations of choices, with their variants), known platforms (commercial registers, commune CMS, site CMS), and patterns learned after each campaign. See [docs/patterns.md](docs/patterns.md).
+- **Patterns and templates.** Collector projects and studies leave reusable knowledge: content URL families, CMS profiles, ranked templates (the winning combinations of choices, with their variants), known platforms (commercial registers, commune CMS, site CMS), and patterns learned after each campaign. See [docs/patterns.md](https://github.com/lfoletti/accesspath/blob/main/docs/patterns.md).
 - **Disputed access.** accesspath does not refuse a disputed access, for example the replay of a logged-in session. The report shows a warning.
 
 ## Safety
@@ -104,11 +104,11 @@ The tests do not use the internet. They use local fixtures and servers on 127.0.
 
 ## More information
 
-- [docs/REFERENCE.md](docs/REFERENCE.md): installation from the lock files, configuration, data, collector projects, CI.
-- [docs/patterns.md](docs/patterns.md): patterns, ranked templates, known platforms, learned patterns, and how the project uses them.
-- [docs/VEILLE.md](docs/VEILLE.md): how the technology watch changes the code.
-- [skill/SKILL.md](skill/SKILL.md): the `/sap` skill.
+- [docs/REFERENCE.md](https://github.com/lfoletti/accesspath/blob/main/docs/REFERENCE.md): installation from the lock files, configuration, data, collector projects, CI.
+- [docs/patterns.md](https://github.com/lfoletti/accesspath/blob/main/docs/patterns.md): patterns, ranked templates, known platforms, learned patterns, and how the project uses them.
+- [docs/VEILLE.md](https://github.com/lfoletti/accesspath/blob/main/docs/VEILLE.md): how the technology watch changes the code.
+- [skill/SKILL.md](https://github.com/lfoletti/accesspath/blob/main/skill/SKILL.md): the `/sap` skill.
 
 ## License
 
-MIT. See [LICENSE](LICENSE). Contributions: [CONTRIBUTING.md](CONTRIBUTING.md). Security: [SECURITY.md](SECURITY.md).
+MIT. See [LICENSE](https://github.com/lfoletti/accesspath/blob/main/LICENSE). Contributions: [CONTRIBUTING.md](https://github.com/lfoletti/accesspath/blob/main/CONTRIBUTING.md). Security: [SECURITY.md](https://github.com/lfoletti/accesspath/blob/main/SECURITY.md).
